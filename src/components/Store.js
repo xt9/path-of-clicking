@@ -4,24 +4,14 @@ import useGenerators from '../hooks/useGenerators';
 import GeneratorPurchaseItem from './GeneratorPurchaseItem';
 
 const Store = () => {
-    const { getGenerator } = useGenerators();
-    const outpost = getGenerator('outpost');
-    const shadyMerchant = getGenerator('shadyMerchant');
+    const { generators: list } = useGenerators();
 
     return (
-        <div>
+        <div className="Container">
             <h2>Store</h2>
             <hr />
 
-            <GeneratorPurchaseItem
-                generator={outpost}
-                lore="Outposts will raid nearby areas for currency."
-            />
-
-            <GeneratorPurchaseItem
-                generator={shadyMerchant}
-                lore="Shady Merchants will scam passerbys of their hard-earned currency."
-            />
+            {list.map((g) => <GeneratorPurchaseItem generator={g} key={g.id} />)}
         </div>
     );
 };

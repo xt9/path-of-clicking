@@ -2,7 +2,9 @@ import React, { useReducer, useEffect } from 'react';
 import { reducer, defaults } from '../../hooks/useCurrency';
 
 const CurrencyContext = React.createContext();
-const storedState = JSON.parse(window.localStorage.getItem('currency'));
+
+const shouldSaveState = true;
+const storedState = shouldSaveState ? JSON.parse(window.localStorage.getItem('currency')) : null;
 
 const CurrencyProvider = ({ children }) => {
     /* 
@@ -11,9 +13,16 @@ const CurrencyProvider = ({ children }) => {
     */
     const [state, dispatch] = useReducer(reducer, storedState !== null ? storedState : defaults);
 
+    const onUnload = () => {
+        /* Save to localstorage when page unloads */
+        window.localStorage.setItem('currency', JSON.stringify(state));
+    };
+
     useEffect(() => {
-        /* Save to localstorage when context unmounts */
-        return () => window.localStorage.setItem('currency', JSON.stringify(state));
+        window.addEventListener('beforeunload', onUnload);
+        return () => {
+            window.removeEventListener('beforeunload', onUnload);
+        };
     });
 
     return (

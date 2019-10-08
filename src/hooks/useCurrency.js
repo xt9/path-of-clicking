@@ -1,20 +1,27 @@
-/* eslint-disable no-fallthrough */
 /* eslint-disable default-case */
 import { useContext } from 'react';
 import produce from "immer";
 
 import { CurrencyContext } from '../components/context/CurrencyContext';
 
-const defaults = {
-    exaltedOrbs: {
+const defaults = [
+    {
+        id: 'mirror',
+        name: 'Mirror of Kalandra',
+        namePlural: 'Mirrors of Kalandra',
+        conversionCost: 1,
+        conversionTarget: null,
+        amount: 0
+    },
+    {
         id: 'exaltedOrbs',
         name: 'Exalted Orb',
         namePlural: 'Exalted Orbs',
         conversionCost: 1000,
-        conversionTarget: 'NOT_SET',
+        conversionTarget: 'mirror',
         amount: 0
     },
-    chaosOrbs: {
+    {
         id: 'chaosOrbs',
         name: 'Chaos Orb',
         namePlural: 'Chaos Orbs',
@@ -22,7 +29,7 @@ const defaults = {
         conversionTarget: 'exaltedOrbs',
         amount: 0
     },
-    alchemyOrbs: {
+    {
         id: 'alchemyOrbs',
         name: 'Orb of Alchemy',
         namePlural: 'Orbs of Alchemy',
@@ -31,31 +38,35 @@ const defaults = {
         amount: 0
 
     }
-};
+];
 
-const reducer = (state, action) => {
+const reducer = produce((draft, action) => {
     /* https://immerjs.github.io/immer/docs/return */
-    return produce(state, draft => {
-        switch (action.type) {
-            case 'INCREMENT':
-                draft[action.id].amount += action.amount;
-                return;
-            case 'DECREMENT':
-                draft[action.id].amount -= action.amount;
-                return;
-        }
-    });
-};
+    switch (action.type) {
+        case 'INCREMENT':
+            draft[action.id].amount += action.amount;
+            return;
+        case 'DECREMENT':
+            draft[action.id].amount -= action.amount;
+            return;
+        case 'RESET':
+            return defaults;
+    }
+});
 
 const useCurrency = () => {
     const [state, dispatch] = useContext(CurrencyContext);
 
-    function getCurrencyByKey(currency) {
-        return state[currency];
+    function getIndexById(id) {
+        return state.findIndex(obj => obj.id === id);
+    }
+
+    function getCurrencyById(id) {
+        return state[getIndexById(id)];
     }
 
     function getConversionTarget(currency) {
-        return getCurrencyByKey(currency.conversionTarget);
+        return getCurrencyById(currency.conversionTarget);
     }
 
     function canConvertCurrency(fromCurrency, numOfConversions) {
@@ -70,21 +81,27 @@ const useCurrency = () => {
     }
 
     function decrementCurrency(currency, amount) {
-        dispatch({ type: 'DECREMENT', id: currency.id, amount: amount });
+        dispatch({ type: 'DECREMENT', id: getIndexById(currency.id), amount: amount });
     }
 
     function incrementCurrency(currency, amount) {
-        dispatch({ type: 'INCREMENT', id: currency.id, amount: amount });
+        dispatch({ type: 'INCREMENT', id: getIndexById(currency.id), amount: amount });
+    }
+
+    function reset() {
+        dispatch({ type: 'RESET' });
     }
 
     return {
         currency: state,
-        getCurrencyByKey,
+        getCurrencyById,
         getConversionTarget,
         incrementCurrency,
         decrementCurrency,
         canConvertCurrency,
-        convertCurrency
+        convertCurrency,
+        dispatch,
+        reset
     };
 };
 

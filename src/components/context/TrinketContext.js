@@ -1,12 +1,12 @@
 import React, { useReducer, useEffect } from 'react';
-import { reducer, defaults } from '../../hooks/useGenerators';
+import { reducer, defaults } from '../../hooks/useTrinkets';
 
-const GeneratorContext = React.createContext();
+const TrinketContext = React.createContext();
 
 const shouldSaveState = true;
-const storedState = shouldSaveState ? JSON.parse(window.localStorage.getItem('generators')) : null;
+const storedState = shouldSaveState ? JSON.parse(window.localStorage.getItem('trinkets')) : null;
 
-const GeneratorProvider = ({ children }) => {
+const TrinketProvider = (props) => {
     /* 
         Init state with either defaults or the previous state from localStorage 
         defaults live in the custom hook file for ease of reference.
@@ -15,7 +15,7 @@ const GeneratorProvider = ({ children }) => {
 
     const onUnload = () => {
         /* Save to localstorage when page unloads */
-        window.localStorage.setItem('generators', JSON.stringify(state));
+        window.localStorage.setItem('trinkets', JSON.stringify(state));
     };
 
     useEffect(() => {
@@ -26,10 +26,10 @@ const GeneratorProvider = ({ children }) => {
     });
 
     return (
-        <GeneratorContext.Provider value={[state, dispatch]}>
-            {children}
-        </GeneratorContext.Provider>
+        <TrinketContext.Provider value={[state, dispatch]}>
+            {props.children}
+        </TrinketContext.Provider>
     );
 };
 
-export { GeneratorContext, GeneratorProvider };
+export { TrinketContext, TrinketProvider };

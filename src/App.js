@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import './css/app.css';
+import './css/animate.min.css';
 
-import { Tabs, Tab, Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 
-import TradePage from './components/TradePage';
+import Store from './components/Store';
 import UpgradePage from './components/UpgradePage';
+import TrinketPage from './components/TrinketPage';
+
+import CurrencyTrade from './components/CurrencyTrade';
 import TickRunner from './components/TickRunner';
 
 import { CurrencyProvider } from './components/context/CurrencyContext';
 import { GeneratorProvider } from './components/context/GeneratorContext';
 import { UpgradeProvider } from './components/context/UpgradeContext';
+import { TrinketProvider } from './components/context/TrinketContext';
+import useTrinkets from './hooks/useTrinkets';
+import { NotificationProvider } from './components/context/NotificationContext';
 
 const App = () => {
     return (
@@ -19,10 +26,22 @@ const App = () => {
             <CurrencyProvider>
                 <GeneratorProvider>
                     <UpgradeProvider>
+                        <TrinketProvider>
+                            <NotificationProvider>
 
-                        <TickRunner />
-                        <ControlledTabs />
+                                <TickRunner />
 
+                                <div className="wrapper">
+                                    <div className="left">
+                                        <ControlledTabs />
+                                    </div>
+                                    <div className="right">
+                                        <CurrencyTrade />
+                                    </div>
+                                </div>
+
+                            </NotificationProvider>
+                        </TrinketProvider>
                     </UpgradeProvider>
                 </GeneratorProvider>
             </CurrencyProvider>
@@ -32,22 +51,41 @@ const App = () => {
 };
 
 const ControlledTabs = () => {
-    const [key, setKey] = useState('farm');
+    const { trinkets } = useTrinkets();
+    const [key, setKey] = useState('store');
+    const [isPrestigeUnlocked, setPrestigeUnlocked] = useState(JSON.parse(window.localStorage.getItem('isPrestigeUnlocked')));
+
+    useEffect(() => {
+        /* Update local scope isPrestigeUnlocked if trinket state changes */
+        setPrestigeUnlocked(JSON.parse(window.localStorage.getItem('isPrestigeUnlocked')));
+    }, [trinkets]);
+
+    const tabs = [
+        { title: 'Store & Trading', key: 'store', pageElement: <Store />, enabled: true },
+        { title: 'Upgrades', key: 'upgrades', pageElement: <UpgradePage />, enabled: true },
+        { title: 'Trinkets', key: 'trinkets', pageElement: <TrinketPage />, enabled: true },
+        { title: 'Azurite mine', key: 'azurite', pageElement: <div></div>, enabled: isPrestigeUnlocked }
+    ];
+    const currentTab = tabs.findIndex(obj => obj.key === key);
 
     return (
-        <Tabs id="controlled-tab-example" activeKey={key} onSelect={k => setKey(k)}>
-            <Tab eventKey="farm" title="Store & Trading">
-                <TradePage />
-            </Tab>
-            <Tab eventKey="upgrades" title="Upgrades">
-                <UpgradePage />
-            </Tab>
-            <Tab eventKey="trinkets" title="Trinkets">
-                <h2>Trinkets</h2>
-            </Tab>
-            <Tab eventKey="azurite-mines" title="Azurite Mines" disabled />
-        </Tabs>
+        <div>
+            <nav>
+                <ul>
+                    {tabs.map((tab) => {
+                        return (
+                            <li onClick={(k) => setKey(tab.key)} key={tab.key}>
+                                <Button variant="dark" disabled={!tab.enabled}>
+                                    {tab.title}
+                                </Button>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </nav>
+            {tabs[currentTab].pageElement}
+        </div>
     );
-}
+};
 
 export default App;

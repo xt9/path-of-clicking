@@ -1,37 +1,40 @@
 import React from 'react';
 import { ListGroup, Button } from 'react-bootstrap';
 
-import CurrencyIcon from './CurrencyIcon';
+import CurrencyIcon from './icons/CurrencyIcon';
+import GeneratorIcon from './icons/GeneratorIcon';
+
 import useGenerators from '../hooks/useGenerators';
 import useCurrency from "../hooks/useCurrency";
 
-const GeneratorPurchaseItem = ({ generator, lore }) => {
+const GeneratorPurchaseItem = ({ generator }) => {
     const { canPurchase, purchase, getPurchaseCost, getGenerationPerSecond } = useGenerators();
-    const { getCurrencyByKey } = useCurrency();
-    const { name, namePlural, amount, priceUnit, generationUnit } = generator;
+    const { getCurrencyById } = useCurrency();
+    const { name, namePlural, amount, priceUnit, generationUnit, lore } = generator;
 
-    const generationCurrency = getCurrencyByKey(generationUnit);
-    const purchaseCurrency = getCurrencyByKey(priceUnit);
+    const generationCurrency = getCurrencyById(generationUnit);
+    const purchaseCurrency = getCurrencyById(priceUnit);
 
     const cost = getPurchaseCost(generator);
     const currencyPerSecond = getGenerationPerSecond(generator);
 
     const generationName = currencyPerSecond === 1 ? generationCurrency.name : generationCurrency.namePlural;
-    const purchaseName = cost === 1 ? purchaseCurrency.name : purchaseCurrency.namePlural;
 
     return (
         <ListGroup.Item className="GeneratorPurchaseItem">
-            <h3>{namePlural} x{amount}</h3>
-            <p>{lore}</p>
-            <p>Generates {currencyPerSecond} <CurrencyIcon currency={generationCurrency} size={30} /> {generationName} per second.</p>
-            <p>Next {name} costs: {cost} {purchaseName} <CurrencyIcon currency={purchaseCurrency} size={30} /></p>
-            <Button
-                variant="dark"
-                disabled={!canPurchase(generator)}
-                onClick={() => purchase(generator)}
-            >
-                Buy {name}
-            </Button>
+            <div className="info">
+                <h5>{namePlural} ({amount})</h5>
+                <p>{lore}</p>
+                <p>Generates {currencyPerSecond.toLocaleString('en')}x <CurrencyIcon currency={generationCurrency} size={28} /> {generationName} per second.</p>
+                <Button
+                    variant="dark"
+                    disabled={!canPurchase(generator)}
+                    onClick={() => purchase(generator)}
+                >
+                    Buy {name} for {cost.toLocaleString('en')}x <CurrencyIcon currency={purchaseCurrency} size={28} />
+                </Button>
+            </div>
+            <GeneratorIcon generator={generator} />
         </ListGroup.Item>
     );
 };
