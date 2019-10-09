@@ -35,7 +35,7 @@ const defaults = [
         namePlural: 'Orbs of Alchemy',
         conversionCost: 4,
         conversionTarget: 'chaosOrbs',
-        amount: 0
+        amount: 3
 
     }
 ];

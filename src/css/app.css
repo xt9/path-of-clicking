@@ -1,6 +1,7 @@
 body {
   max-width: 100%;
   overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .Container {
@@ -23,24 +24,37 @@ body {
   min-width: 300px;
 }
 
-nav {
+#navigation {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-nav li {
-  display: inline-block;
-  padding: 10px 24px 0px 0px;
+#navigation ul {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 8px 0;
 }
 
-nav li:hover {
+#navigation li {
+  display: inline-block;
+  padding: 8px 12px;
+}
+
+#navigation li button {
+  min-width: 120px;
+}
+
+#navigation li:hover {
   color: aqua;
 }
 
 .GeneratorPurchaseItem,
 .Upgrade,
 .Trinket,
-.UnlockedUpgradesWrapper,
-.UnlockedTrinketsWrapper {
+.NotificationDisplay,
+.unlocked-upgrades,
+.available-trinkets {
   margin-top: 18px;
 }
 
@@ -86,6 +100,7 @@ nav li:hover {
   margin-right: 6px;
 }
 
+/* GeneratorPurchaseItem */
 .GeneratorPurchaseItem {
   display: flex;
   align-items: center;
@@ -127,6 +142,7 @@ nav li:hover {
   }
 }
 
+/* Trinket */
 .Trinket {
   display: flex;
   align-items: center;
@@ -170,5 +186,40 @@ nav li:hover {
   .Trinket .info {
     flex: 1 1 100%;
     text-align: center;
+  }
+}
+
+/* Dev section */
+.dev-section {
+  margin-top: 40px;
+}
+
+.dev-section h5 {
+  margin: 0;
+}
+
+.dev-section hr {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.dev-section .buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.dev-section .air {
+  flex: 1 1 50%;
+  padding: 2px;
+}
+
+.dev-section button {
+  width: 100%;
+}
+
+@media (max-width: 770px) {
+  .dev-section .air {
+    flex: 1 1 100%;
   }
 }

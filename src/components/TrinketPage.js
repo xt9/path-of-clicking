@@ -14,14 +14,22 @@ const TrinketPage = () => {
 
     return (
         <div className="Container">
-            <div className="UnlockedTrinketsWrapper">
-                <h2>Unlocked Trinkets</h2>
-                <hr />
+            <div>
+                {purchased.length > 0 ? (
+                    <div>
+                        <h3>Purchased Trinkets</h3>
+                        <hr />
+                    </div>
+                ) : null}
                 {purchased.map((trinket) => <Trinket trinket={trinket} key={trinket.id} />)}
             </div>
-            <hr />
 
-            <h2>Available Trinkets</h2>
+            {available.length > 0 ? (
+                <div className="available-trinkets">
+                    <h3>Available Trinkets</h3>
+                    <hr />
+                </div>
+            ) : null}
             {available.map((trinket) => <Trinket trinket={trinket} key={trinket.id} />)}
         </div>
     );

@@ -8,7 +8,7 @@ const Store = () => {
 
     return (
         <div className="Container">
-            <h2>Store</h2>
+            <h3>Store</h3>
             <hr />
 
             {list.map((g) => <GeneratorPurchaseItem generator={g} key={g.id} />)}

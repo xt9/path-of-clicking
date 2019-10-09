@@ -10,16 +10,14 @@ import NotificationDisplay from './NotificationDisplay';
 
 const CurrencyTrade = () => {
     const { reset } = useReset();
-    const { currency, getConversionTarget } = useCurrency();
+    const { currency, getConversionTarget, getCurrencyById, incrementCurrency } = useCurrency();
     const [amount, setAmount] = useState(1);
 
     const batchSize = isNaN(parseInt(amount)) ? 1 : parseInt(amount);
 
     return (
-        <div className="Container animated">
-            <NotificationDisplay />
+        <div className="Container">
 
-            <h2>Trading</h2>
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon1">Trade Bulk Setting</span>
@@ -45,16 +43,45 @@ const CurrencyTrade = () => {
                 );
             })}
 
-            <hr />
+            <NotificationDisplay />
 
+            {process.env.REACT_APP_ENV === 'dev' ? (
+                <div className="dev-section">
+                    <h5>Dev Section</h5>
+                    <hr />
+                    <div className="buttons">
+                        <div className="air">
+                            <Button variant="dark" onClick={() => incrementCurrency(getCurrencyById('alchemyOrbs'), 1000)}>
+                                Add 1,000 Alchemy
+                            </Button>
+                        </div>
 
-            <br />
-            <hr />
-            <h4>Dev Section</h4>
+                        <div className="air">
+                            <Button variant="dark" onClick={() => incrementCurrency(getCurrencyById('chaosOrbs'), 100)}>
+                                Add 100 Chaos
+                            </Button>
+                        </div>
 
-            <Button variant="dark" onClick={() => reset()}>
-                Reset playthrough
-            </Button>
+                        <div className="air">
+                            <Button variant="dark" onClick={() => incrementCurrency(getCurrencyById('exaltedOrbs'), 10)}>
+                                Add 10 Exalts
+                            </Button>
+                        </div>
+
+                        <div className="air">
+                            <Button variant="dark" onClick={() => incrementCurrency(getCurrencyById('mirror'), 1)}>
+                                Add 1 Mirrors
+                            </Button>
+                        </div>
+
+                        <div className="air">
+                            <Button variant="dark" onClick={() => reset()}>
+                                Reset Playthrough
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            ) : null}
         </div>
     );
 };

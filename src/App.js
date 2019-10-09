@@ -9,18 +9,22 @@ import { Container, Button } from 'react-bootstrap';
 import Store from './components/Store';
 import UpgradePage from './components/UpgradePage';
 import TrinketPage from './components/TrinketPage';
-
 import CurrencyTrade from './components/CurrencyTrade';
+
 import TickRunner from './components/TickRunner';
+import useTrinkets from './hooks/useTrinkets';
 
 import { CurrencyProvider } from './components/context/CurrencyContext';
 import { GeneratorProvider } from './components/context/GeneratorContext';
 import { UpgradeProvider } from './components/context/UpgradeContext';
 import { TrinketProvider } from './components/context/TrinketContext';
-import useTrinkets from './hooks/useTrinkets';
 import { NotificationProvider } from './components/context/NotificationContext';
 
 const App = () => {
+    useEffect(() => {
+        document.title = "Path of Clicking";
+    }, []);
+
     return (
         <Container>
             <CurrencyProvider>
@@ -61,21 +65,21 @@ const ControlledTabs = () => {
     }, [trinkets]);
 
     const tabs = [
-        { title: 'Store & Trading', key: 'store', pageElement: <Store />, enabled: true },
-        { title: 'Upgrades', key: 'upgrades', pageElement: <UpgradePage />, enabled: true },
+        { title: 'Store', key: 'store', pageElement: <Store />, enabled: true },
         { title: 'Trinkets', key: 'trinkets', pageElement: <TrinketPage />, enabled: true },
+        { title: 'Upgrades', key: 'upgrades', pageElement: <UpgradePage />, enabled: true },
         { title: 'Azurite mine', key: 'azurite', pageElement: <div></div>, enabled: isPrestigeUnlocked }
     ];
     const currentTab = tabs.findIndex(obj => obj.key === key);
 
     return (
         <div>
-            <nav>
+            <nav id="navigation">
                 <ul>
                     {tabs.map((tab) => {
                         return (
-                            <li onClick={(k) => setKey(tab.key)} key={tab.key}>
-                                <Button variant="dark" disabled={!tab.enabled}>
+                            <li key={tab.key}>
+                                <Button variant="dark" onClick={(k) => setKey(tab.key)} disabled={!tab.enabled}>
                                     {tab.title}
                                 </Button>
                             </li>

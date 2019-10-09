@@ -21,7 +21,6 @@ const reducer = produce((draft, action) => {
 const useNotification = () => {
     const [state, dispatch] = useContext(NotificationContext);
 
-
     function addNotification(title, message) {
         dispatch({ type: 'ADD', notification: { title: title, message: message } });
     }

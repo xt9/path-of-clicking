@@ -15,8 +15,8 @@ const defaults = [
         currentCooldown: 0,
         actionName: 'Shake the dice vigorously',
         purchaseUnit: 'alchemyOrbs',
-        purchaseCost: 0,
-        isPurchased: true
+        purchaseCost: 3,
+        isPurchased: false
     },
     {
         id: 'precursor',

@@ -13,14 +13,22 @@ const UpgradePage = () => {
 
     return (
         <div className="Container">
-            <h2>Upgrades</h2>
-            <hr />
+            {availableUpgrades.length > 0 ? (
+                <div>
+                    <h3>Upgrades</h3>
+                    <hr />
+                </div>
+            ) : null}
 
             {availableUpgrades.map((upgrade) => <Upgrade upgrade={upgrade} key={upgrade.id} />)}
 
-            <div className="UnlockedUpgradesWrapper">
-                <h2>Unlocked Upgrades</h2>
-                <hr />
+            <div className="unlocked-upgrades">
+                {purchasedUpgrades.length > 0 ? (
+                    <div>
+                        <h3>Purchased Upgrades</h3>
+                        <hr />
+                    </div>
+                ) : null}
                 {purchasedUpgrades.map((upgrade) => <Upgrade upgrade={upgrade} key={upgrade.id} />)}
             </div>
         </div>
