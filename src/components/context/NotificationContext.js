@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer } from 'react';
 import { reducer } from '../../hooks/useNotifications';
 
 const NotificationContext = React.createContext();
